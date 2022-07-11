@@ -12,48 +12,26 @@ import {
 
 const OTPInput = () => {
   const navigation = useNavigation();
-  // time 60 seconds
-  // const [time, setTime] = React.useState(5);
-  // const [isTimerRunning, setIsTimerRunning] = React.useState(true);
+  const [timer, setTimer] = React.useState(60);
+  const [isPressable, setIsPressable] = React.useState(timer > 0);
 
-  // const [canRequest, setCanRequest] = React.useState(!isTimerRunning);
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setTimer(timer - 1);
+    }, 1000);
+    if (timer === 0) {
+      clearInterval(interval);
+    }
+    return () => clearInterval(interval);
+  }, [timer]);
 
-  // const startTimer = () => {
-  //   setIsTimerRunning(true);
-  //   clearInterval(interval);
-  //   setTime(5);
-  //   const interval = setInterval(() => {
-  //     setTime((time) => time - 1);
-  //   }, 1000);
-  //   if (time === 0) {
-  //     clearInterval(interval);
-  //     setIsTimerRunning(false);
-  //     setCanRequest(true);
-  //   }
-  // }
-
-  // const stopTimer = () => {
-  //   setIsTimerRunning(false);
-  //   clearInterval(interval);
-  // }
-
-  // // stops the time when it reaches 0
-  // React.useEffect(() => {
-  //   if (time === 0) {
-  //     stopTimer();
-  //   }
-  // }
-  // , [time]);
-
-  // // start the time when the page loads
-  // React.useEffect(() => {
-  //   if (isTimerRunning) {
-  //     const interval = startTimer();
-  //     return () => clearInterval(interval);
-  //   } else {
-  //     return () => {};
-  //   }
-  // }, [isTimerRunning]);
+  React.useEffect(() => {
+    if (timer === 0) {
+      setIsPressable(true);
+    } else {
+      setIsPressable(false);
+    }
+  }, [timer]);
 
   return (
     <SafeAreaView>
@@ -93,13 +71,18 @@ const OTPInput = () => {
           <Text style={tw`text-lg `}>หากยังไม่ได้รับรหัส</Text>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("OTPInput");
+              timer === 0 ? setTimer(60) : null;
             }}
             style={tw`self-center `}
+            activeOpacity={isPressable ? 0.2 : 1}
           >
-            <Text style={tw`text-lg text-blue `}>
-              ส่งรหัสใหม่ &#40;57&#41;
-            </Text>
+            {timer === 0 ? (
+              <Text style={tw`text-lg text-blue `}>ส่งรหัสใหม่</Text>
+            ) : (
+              <Text style={tw`text-lg text-blue `}>
+                ส่งรหัสใหม่ &#40;{timer}&#41;
+              </Text>
+            )}
           </TouchableOpacity>
         </View>
       </View>
