@@ -15,10 +15,9 @@ const LoginPinCode = () => {
     Alert.alert("Touch ID", "Touch ID is not supported on this device", [
       {
         text: "ยกเลิก",
-        onPress: () => console.log("Cancel Pressed"),
         style: "cancel",
       },
-      { text: "OK", onPress: () => console.log("OK Pressed") },
+      { text: "OK" },
     ]);
   }, []);
 
